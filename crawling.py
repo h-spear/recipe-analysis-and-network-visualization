@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
 import time
+import re
 from bs4 import BeautifulSoup
 
 result = []
@@ -44,9 +45,17 @@ def crawling_recipe_info(num):
                 tmp = []
                 title = tag.find("dt").get_text()
                 ancher = tag.find("dd")
-                seperated = ancher.get_text().split(",")
+
+                seperated = ancher.get_text()
+                seperated = re.sub(r"\([^)]*\)", "", seperated)
+                seperated = re.sub(r"\[[^]]*\]", "", seperated)
+                seperated = seperated.split(",")
                 for word in seperated:
-                    tmp.append(" ".join(word.split()[0:-1]))
+                    word = word.split()
+                    if len(word) == 1:
+                        tmp.append(" ".join(word))
+                        continue
+                    tmp.append(" ".join(word[0:-1]))
 
                 if title == "주재료":
                     main_ingredients = tmp
@@ -60,7 +69,12 @@ def crawling_recipe_info(num):
 
         recipe = dict()
 
+        main_ingredients = list(set(main_ingredients))
+        sub_ingredients = list(set(sub_ingredients))
+        seasoning = list(set(seasoning))
+
         # dictionary 형태로 저장
+        recipe["num"] = num
         recipe["name"] = name
         recipe["type"] = type
         recipe["nation"] = nation
@@ -105,6 +119,7 @@ def convert_from_dict_to_list():
     tmp = []
     for dict in result:
         converted = []
+        converted.append(dict["num"])
         converted.append(dict["name"])
         converted.append(dict["type"])
         converted.append(dict["nation"])
@@ -134,7 +149,7 @@ def save_to_excel():
     file_path = "after_crawling.xlsx"
 
     # columns로 설정할 리스트
-    columns = ["레시피", "방법", "국가", "종류"]
+    columns = ["번호", "레시피", "방법", "국가", "종류"]
     for i in range(1, max_main_ingre_length + 1):
         columns.append(f"주재료{i}")
     for i in range(1, max_sub_ingre_length + 1):

@@ -1,4 +1,3 @@
 # SWTeamProject
-SW PPT
 
-TODO: 
+TODO:

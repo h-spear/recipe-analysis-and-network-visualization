@@ -1,0 +1,53 @@
+{
+    "type": "network",
+    "version": "1.0",
+    "data": "data.json",
+    "logo": {
+        "file": "",
+        "link": "",
+        "text": "SW 8조"
+    },
+    "text": {
+        "more": "node 레시피\nedge 관계\n",
+        "intro": "시각화",
+        "title": "레시피 간 연관 관계 분석 그래프"
+    },
+    "legend": {
+        "edgeLabel": "레시피 간 관계",
+        "colorLabel": "betweeness centrality",
+        "nodeLabel": "레시피"
+    },
+    "features": {
+        "search": true,
+        "groupSelectorAttribute": "Label",
+        "hoverBehavior": "dim"
+    },
+    "informationPanel": {
+        "groupByEdgeDirection": false,
+        "imageAttribute": false
+    },
+    "sigma": {
+        "drawingProperties": {
+            "defaultEdgeType": "curve",
+            "defaultHoverLabelBGColor": "#002147",
+            "defaultLabelBGColor": "#ddd",
+            "activeFontStyle": "bold",
+            "defaultLabelColor": "#000",
+            "labelThreshold": 8,
+            "defaultLabelHoverColor": "#fff",
+            "fontStyle": "bold",
+            "hoverFontStyle": "bold",
+            "defaultLabelSize": 14
+        },
+        "graphProperties": {
+            "maxEdgeSize": 0.5,
+            "minEdgeSize": 0.2,
+            "minNodeSize": 1,
+            "maxNodeSize": 10
+        },
+        "mouseProperties": {
+            "maxRatio": 30,
+            "minRatio": 0.75
+        }
+    }
+}

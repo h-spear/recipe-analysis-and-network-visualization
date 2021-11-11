@@ -14,13 +14,13 @@
   <script src="js/sigma/sigma.min.js" type="text/javascript" language="javascript"></script>
     <script src="js/sigma/sigma.parseJson.js" type="text/javascript" language="javascript"></script>
   <script src="js/fancybox/jquery.fancybox.pack.js" type="text/javascript" language="javascript"></script>
-  <script src="js/main.js" type="text/javascript" language="javascript"></script>
+  <script src="js/main.js" type="text/javascript" language="javascript" ></script>
+  <script src="js/new.js" type="module" ></script>
 
   <link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox.css"/>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
   <link rel="stylesheet" media="screen and (max-height: 770px)" href="css/tablet.css" />
 </head>
-
 
 <body>
   <div class="sigma-parent">
@@ -76,23 +76,38 @@
 <div class="text">
 	<div title="Close" class="left-close returntext"><div class="c cf"><span>Return to the full network</span></div></div>	
 <div class="headertext">
-	<span>Panel;</span>
+	<span>Recipe Info.</span>
 </div>	
-  <div class="nodeattributes">
-    <div class="name"></div>
-	<div class="data"></div>
-    <div class="p">Connections:</div>
-    <div class="link">
-      <ul>
-      </ul>
-    </div>
+<div class="nodeattributes">
+  <div class="info">
+    <a href="#" class="info__link" target="_blank"><img src="https://www.menupan.com/cook/cookimg/001900.jpg" class="recipe_image" alt=""></a>
+    <a href="#" class="info__content info__name info__link" target="_blank">이름<br></a>
+    <div class="info__container"><span class="info__label">번호</span><span class="info__content info__num">번호</span><br></div>
+    <div class="info__container"><span class="info__label">국가</span><span class="info__content info__nation">국가</span><br></div>
+    <div class="info__container"><span class="info__label">방법</span><span class="info__content info__way">방법</span><br></div>
+    <div class="info__container"><span class="info__label">종류</span><span class="info__content info__kind">종류</span><br></div>
+    <div class="info__container"><span class="info__label">주재료</span><span class="info__content info__ingre1">주재료</span><br></div>
+    <div class="info__container"><span class="info__label">부재료</span><span><span class="info__content info__ingre2">부재료</span><br></div>
+    <div class="info__container"><span class="info__label">양념</span><span class="info__content info__source">양념</span><br></div>
+    <div class="info__container"><span class="info__label">Degree</span><span class="info__content info__degree">degree</span><br></div>
+    <div class="info__container"><span class="info__label">Modularity Class</span><span class="info__content info__modularity">Modularity Class</span><br></div>
+    <div class="info__container"><span class="info__label">Betweenness Centrality</span><span class="info__content info__between">Betweenness Centrality</span><br></div>
   </div>
+  <!-- <div class="name"></div> -->
+	<!-- <div class="data"></div> -->
+
+    <div class="p">Connections:</div>
+      <div class="link">
+        <ul>
+        </ul>
+      </div>
+    </div>
 	</div>
 </div>
-<div id="developercontainer">
+<!-- <div id="developercontainer">
 	<a href="http://www.oii.ox.ac.uk" title="Oxford Internet Institute"><div id="oii"><span>OII</span></div></a>
 	<a href="http://jisc.ac.uk" title="JISC"><div id="jisc"><span>JISC</span></div></a>	
-</div>
+</div> -->
 <script type="text/javascript">
 
   var _gaq = _gaq || [];

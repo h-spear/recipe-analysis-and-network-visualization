@@ -3,6 +3,11 @@
     margin: 0px;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .cf:before,
 .cf:after {
     content: '';
@@ -26,6 +31,7 @@ body {
     font-size: 12px;
     font-family: sans-serif;
     line-height: 1.25em;
+    overflow: hidden;
 }
 
 .sigma-parent {
@@ -62,7 +68,7 @@ canvas#sigma_bg_1 {
     bottom: 0;
     top: 0;
     right: 0;
-    width: 240px;
+    width: 350px;
     background-color: #fff;
     margin: 0;
     word-wrap: break-word;
@@ -82,7 +88,7 @@ canvas#sigma_bg_1 {
     height: 14px;
     border-bottom: 1px solid #999;
     padding: 0px 0 10px 0;
-    font-size: 16px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -154,69 +160,6 @@ canvas#sigma_bg_1 {
     height: 20px;
     float: left;
     display: block;
-}
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(7),
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(31),
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(34),
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(25),
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(28) {
-    display: none;
-}
-#attributepane > div > div.nodeattributes > div.data {
-    display: flex;
-    flex-direction: column;
-}
-
-#attributepane > div > div.nodeattributes > div.data > br {
-    display: none;
-}
-/* 주재료 */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(37) {
-    order: 4;
-}
-
-/* 부재료 */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(1) {
-    order: 5;
-}
-
-/* 양념 */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(19) {
-    order: 6;
-}
-
-/* 국가 */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(13) {
-    order: 2;
-}
-
-/* 번호 */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(16) {
-    order: 0;
-}
-
-/* 종류 */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(22) {
-    order: 3;
-}
-
-/* 방법 */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(43) {
-    order: 1;
-}
-
-/* modularity class */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(4) {
-    order: 8;
-}
-
-/* Degree */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(10) {
-    order: 7;
-}
-/* Betweeness */
-#attributepane > div > div.nodeattributes > div.data > span:nth-child(40) {
-    order: 9;
 }
 
 #attributepane .link {
@@ -627,4 +570,42 @@ canvas#sigma_bg_1 {
     background-position: -45px -147px;
     cursor: pointer;
     display: none;
+}
+
+.recipe_image {
+    width: 300px;
+    height: 300px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    justify-content: center;
+}
+
+.info__container {
+    margin: 3px 0;
+}
+
+.info__name {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.info__label {
+    line-height: 22px;
+    font-size: 16px;
+    font-weight: 800;
+    margin-right: 10px;
+}
+
+.info__name {
+    transition: color 300ms;
+}
+
+.info__name:hover {
+    color: orange;
 }

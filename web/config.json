@@ -47,7 +47,7 @@
         },
         "mouseProperties": {
             "maxRatio": 30,
-            "minRatio": 0.75
+            "minRatio": 1
         }
     }
 }

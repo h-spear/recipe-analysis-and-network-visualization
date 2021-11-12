@@ -3,12 +3,124 @@ let prevColor;
 let prevNode = '';
 var sigInst, canvas, $GP;
 
+let label;
+const label_nation = [
+    '한식',
+    '퓨전',
+    '서양',
+    '이탈리아',
+    '중국',
+    '일본',
+    '동남아시아',
+    '멕시코',
+];
+const label_way = [
+    '구이',
+    '부침',
+    '만두,면류',
+    '밥,죽,스프',
+    '볶음',
+    '피자',
+    '밑반찬,김치',
+    '빵,과자',
+    '국',
+    '나물,생채,샐러드',
+    '조림',
+    '후식',
+    '샌드위치,햄버거',
+    '찜',
+    '튀김,커틀릿',
+    '양념장',
+    '찌개,전골,스튜',
+    '음료',
+    '도시락,간식',
+    '양식',
+    '떡,한과',
+    '그라탕,리조또',
+];
+const label_kind = [
+    '닭고기류',
+    '어류/패류',
+    '쇠고기류',
+    '가공식품류',
+    '버섯류',
+    '채소류',
+    '곡류',
+    '밀가루',
+    '견과류',
+    '알류',
+    '돼지고기류',
+    '과일류',
+    '콩류',
+    '기타',
+    '해조류',
+];
+const label_modularity = [''];
+
+const moreInfo2 = document.querySelector('.connection');
+const popUp = document.querySelector('.message_connections');
+moreInfo2.addEventListener('mouseover', () => {
+    popUp.classList.remove('invisible');
+});
+moreInfo2.addEventListener('mouseout', () => {
+    popUp.classList.add('invisible');
+});
+
 async function load() {
-    dataJson = await import('../data.js');
+    var data = sessionStorage.getItem('dataSet');
+    let select = 'not';
+    if (data == 'not.json') {
+        dataJson;
+        labal = [];
+        return;
+    }
+    if (data == 'data.json') {
+        dataJson = await import('../data/data.js');
+        select = 'nation';
+    } else if (data == 'data_way.json') {
+        dataJson = await import('../data/data_way.js');
+        select = 'way';
+    } else if (data == 'data_kind.json') {
+        dataJson = await import('../data/data_kind.js');
+        select = 'kind';
+    } else if (data == 'data_modularity.json') {
+        dataJson = await import('../data/data_modularity.js');
+        select = 'modularity';
+    }
+    $('.clustering').val(select).prop('selected', true);
     dataJson = dataJson.default;
 }
 
 load();
+
+$('.clustering').change(function () {
+    let selected = $(this).val();
+    switch (selected) {
+        case 'not':
+            sessionStorage.setItem('dataSet', 'not.json');
+            location.reload();
+            break;
+        case 'nation':
+            sessionStorage.setItem('dataSet', 'data.json');
+            location.reload();
+            break;
+        case 'way':
+            sessionStorage.setItem('dataSet', 'data_way.json');
+            location.reload();
+            break;
+        case 'kind':
+            sessionStorage.setItem('dataSet', 'data_kind.json');
+            location.reload();
+            break;
+        case 'modularity':
+            sessionStorage.setItem('dataSet', 'data_modularity.json');
+            location.reload();
+            break;
+        default:
+            console.log('Error!! ');
+            return;
+    }
+});
 
 //Load configuration file
 var config = {};
@@ -26,11 +138,10 @@ function InfoChange(name) {
             ingre2 = node.attributes.부재료;
             source = node.attributes.양념;
             kind = node.attributes.종류;
-            degree = node.attributes.Degree;
+            degree = node.attributes.Degree / 2;
             modularity = node.attributes['Modularity Class'];
             between = node.attributes['Betweenness Centrality'];
         }
-        console.log(node);
     });
     if (num.length === 1) num = '000' + num;
     if (num.length === 2) num = '00' + num;
@@ -100,8 +211,7 @@ Object.size = function (obj) {
 };
 
 function initSigma(config) {
-    var data = config.data;
-
+    var data = 'data/' + sessionStorage.getItem('dataSet');
     var drawProps, graphProps, mouseProps;
     if (config.sigma && config.sigma.drawingProperties)
         drawProps = config.sigma.drawingProperties;
@@ -176,57 +286,6 @@ function initSigma(config) {
 }
 
 function setupGUI(config) {
-    // Initialise main interface elements
-    var logo = ''; // Logo elements
-    if (config.logo.file) {
-        logo = '<img src="' + config.logo.file + '"';
-        if (config.logo.text) logo += ' alt="' + config.logo.text + '"';
-        logo += '>';
-    } else if (config.logo.text) {
-        logo = '<h1>' + config.logo.text + '</h1>';
-    }
-    if (config.logo.link)
-        logo = '<a href="' + config.logo.link + '">' + logo + '</a>';
-    $('#maintitle').html(logo);
-
-    // #title
-    $('#title').html('<h2>' + config.text.title + '</h2>');
-
-    // #titletext
-    $('#titletext').html(config.text.intro);
-
-    // More information
-    if (config.text.more) {
-        $('#information').html(config.text.more);
-    } else {
-        //hide more information link
-        $('#moreinformation').hide();
-    }
-
-    // Legend
-
-    // Node
-    if (config.legend.nodeLabel) {
-        $('.node').next().html(config.legend.nodeLabel);
-    } else {
-        //hide more information link
-        $('.node').hide();
-    }
-    // Edge
-    if (config.legend.edgeLabel) {
-        $('.edge').next().html(config.legend.edgeLabel);
-    } else {
-        //hide more information link
-        $('.edge').hide();
-    }
-    // Colours
-    if (config.legend.nodeLabel) {
-        $('.colours').next().html(config.legend.colorLabel);
-    } else {
-        //hide more information link
-        $('.colours').hide();
-    }
-
     $GP = {
         calculating: !1,
         showgroup: !1,
@@ -255,6 +314,14 @@ function setupGUI(config) {
     $GP.cluster = new Cluster($GP.form.find('#attributeselect'));
     config.GP = $GP;
     initSigma(config);
+}
+function setLabel() {
+    var data = sessionStorage.getItem('dataSet');
+    if (data == 'not.json') labal = [];
+    if (data == 'data.json') label = label_nation;
+    else if (data == 'data_way.json') label = label_way;
+    else if (data == 'data_kind.json') label = label_kind;
+    else if (data == 'data_modularity.json') label = label_modularity;
 }
 
 function configSigmaElements(config) {
@@ -359,20 +426,26 @@ function configSigmaElements(config) {
     $GP.bg2 = $(sigInst._core.domElements.bg2);
     var a = [],
         b,
-        x = 1;
+        x = 0;
+    setLabel();
     for (b in sigInst.clusters)
         a.push(
             '<div style="line-height:12px"><a href="#' +
                 b +
                 '"><div style="width:40px;height:12px;border:1px solid #fff;background:' +
                 b +
-                ';display:inline-block"></div> Group ' +
-                x++ +
+                ';display:inline-block"></div> ' +
+                label[x++] +
                 ' (' +
                 sigInst.clusters[b].length +
                 ' members)</a></div>'
         );
-    //a.sort();
+    var regex = /[^0-9]/g; // 숫자가 아닌 문자열을 매칭하는 정규식
+    a.sort(function (a, b) {
+        a = a.slice(a.indexOf(' (')).replace(regex, '');
+        b = b.slice(b.indexOf(' (')).replace(regex, '');
+        return b - a;
+    });
     $GP.cluster.content(a.join(''));
     b = {
         minWidth: 400,
@@ -412,7 +485,7 @@ function configSigmaElements(config) {
         !0 == $GP.showgroup ? showGroups(!1) : showGroups(!0);
     });
     a = window.location.hash.substr(1);
-    if (0 < a.length)
+    if (0 < a.length) {
         switch (a) {
             case 'Groups':
                 showGroups(!0);
@@ -424,6 +497,7 @@ function configSigmaElements(config) {
                 ($GP.search.exactMatch = !0), $GP.search.search(a);
                 $GP.search.clean();
         }
+    }
 }
 
 function Search(a) {
@@ -473,10 +547,8 @@ function Search(a) {
         this.searching = !0;
         this.lastSearch = a;
         this.results.empty();
-        if (1 >= a.length)
-            this.results.html(
-                '<i>You must search for a name with a minimum of 2 letters.</i>'
-            );
+        if (0 >= a.length)
+            this.results.html('<i>please fill in the blanks.</i>');
         else {
             sigInst.iterNodes(function (a) {
                 g.test(a.label.toLowerCase()) &&
@@ -550,6 +622,7 @@ function showGroups(a) {
     prevNode.color = prevColor;
     prevNode = '';
     prevColor = '';
+    $('.info').hide();
 }
 
 function nodeNormal() {
@@ -663,6 +736,24 @@ function nodeActive(a) {
                 ? 1
                 : 0;
         });
+        nowSee = [];
+        dataJson.edges.forEach((e) => {
+            if (e.source == b.id) {
+                nowSee.push([e.target, e.size]);
+            }
+        });
+        e.sort(function (a, b) {
+            c = 0;
+            d = 0;
+            nowSee.forEach((now) => {
+                if (now[0] === a.id) c = now[1];
+                if (now[0] === b.id) d = now[1];
+            });
+            return d - c;
+        });
+        nowSee.sort(function (a, b) {
+            return b[1] - a[1];
+        });
         d = '';
         for (g in e) {
             c = e[g];
@@ -673,12 +764,17 @@ function nodeActive(a) {
             f.push(
                 '<li class="membership"><a href="#' +
                     c.name +
-                    '" onmouseover="sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[\'' +
+                    '" class="connections_a" onmouseover="sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[\'' +
                     c.id +
                     '\'])" onclick="nodeActive(\'' +
                     c.id +
                     '\')" onmouseout="sigInst.refresh()">' +
+                    '<span class="connections_name">' +
                     c.name +
+                    '</span>' +
+                    '<span class="connections_weight">' +
+                    nowSee[g][1].toFixed(3) +
+                    '</span>' +
                     '</a></li>'
             );
         }
@@ -689,12 +785,14 @@ function nodeActive(a) {
         prevColor = b.color;
         b.color = 'rgba(255, 0, 0, 1)';
         InfoChange(b.label);
+        $('.nodeattributes').animate({ scrollTop: 0 }, 400);
+        $('.info').show();
         return f;
     };
 
     /*console.log("mutual:");
 	console.log(mutual);
-	console.log("incoming:");
+	console.log("incoming:"); 
 	console.log(incoming);
 	console.log("outgoing:");
 	console.log(outgoing);*/
@@ -782,6 +880,7 @@ function nodeActive(a) {
         // Image field for attribute pane
         $GP.info_data.html(e.join('<br/>'));
     }
+
     $GP.info_data.show();
     $GP.info_p.html('Connections:');
     $GP.info.animate({ width: 'show' }, 350);

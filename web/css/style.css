@@ -22,6 +22,11 @@ a {
     zoom: 1;
 }
 
+.results {
+    max-height: 200px;
+    overflow: scroll;
+}
+
 html,
 body {
     width: 100%;
@@ -163,18 +168,21 @@ canvas#sigma_bg_1 {
 }
 
 #attributepane .link {
-    padding: 0 0 0 4px;
+    padding: 0 0 0 18px;
 }
 
 #attributepane .link li {
+    list-style: none;
     padding-top: 2px;
+    margin: 2px 0;
     cursor: pointer;
 }
 
 #attributepane .p {
     padding-top: 10px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
+    margin-bottom: 12px;
 }
 
 .left-close {
@@ -234,7 +242,7 @@ canvas#sigma_bg_1 {
 }
 
 #mainpanel {
-    margin-top: 50px;
+    margin-top: 30px;
     margin-left: 25px;
     background: #fff;
     background-color: rgba(255, 255, 255, 0.8);
@@ -275,7 +283,8 @@ canvas#sigma_bg_1 {
     border: 1px solid #999;
     background-color: #fff;
     padding: 5px 7px 4px 7px;
-    width: 205px;
+    width: 190px;
+    height: 30px;
     color: #000;
 }
 
@@ -284,13 +293,23 @@ canvas#sigma_bg_1 {
 }
 
 #search .state {
-    width: 14px;
-    height: 14px;
-    background-image: url('../images/sprite.png');
+    box-sizing: border-box;
     float: right;
-    margin-top: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 26px;
+    text-align: center;
+    border: 2px solid black;
+    border-radius: 8px;
     cursor: pointer;
-    background-position: -131px -13px;
+    background-color: rgb(166, 231, 0);
+    transition: all 300ms;
+    width: 40px;
+    height: 30px;
+}
+
+#search .state:hover {
+    background-color: rgb(124, 173, 0);
 }
 
 #search .state.searching {
@@ -402,30 +421,6 @@ canvas#sigma_bg_1 {
 #legend dl {
 }
 
-#mainpanel h2 {
-    padding-bottom: 10px;
-}
-
-#legend dd {
-    margin-bottom: 8px;
-    color: #000;
-}
-
-#mainpanel .infos dd {
-    margin-bottom: 12px;
-}
-
-#mainpanel .node {
-    background-position: -11px -119px;
-}
-
-#mainpanel .edge {
-    background-position: -51px -122px;
-}
-
-#mainpanel .colours {
-    background-image: url('../images/rainbow.png');
-}
 #legend .note {
     margin-bottom: 8px;
 }
@@ -572,9 +567,42 @@ canvas#sigma_bg_1 {
     display: none;
 }
 
+.description {
+    display: flex;
+    flex-direction: column;
+}
+.description > h1 {
+    font-size: 23px;
+    margin-bottom: 15px;
+}
+
+.box > h2 {
+    margin-top: 13px;
+}
+
+.legend__contents {
+    display: flex;
+    align-items: center;
+    margin: 7px 0;
+    margin-left: 6px;
+}
+
+.legend__contents > img {
+    margin-right: 5px;
+}
+
+.clustering {
+    width: 80px;
+    font-size: 12px;
+}
+
 .recipe_image {
     width: 300px;
     height: 300px;
+    border: 3px solid black;
+    box-sizing: border-box;
+    background-color: black;
+    border-radius: 10px;
 }
 
 .info {
@@ -586,12 +614,15 @@ canvas#sigma_bg_1 {
 
 .info__container {
     margin: 3px 0;
+    margin-left: 10px;
+    position: relative;
 }
 
 .info__name {
-    margin-top: 20px;
-    margin-bottom: 15px;
+    margin-top: 5px;
+    margin-bottom: 7px;
     font-size: 30px;
+    line-height: 33px;
     font-weight: 800;
 }
 
@@ -608,4 +639,76 @@ canvas#sigma_bg_1 {
 
 .info__name:hover {
     color: orange;
+}
+
+.info__container.degree {
+    display: flex;
+    align-items: center;
+}
+
+.more_info {
+    background-color: rgb(219, 219, 219);
+    border: 1px solid black;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.more_info > img {
+    width: 6px;
+}
+
+.more_info.connection {
+    position: absolute;
+    top: 50px;
+    right: 137px;
+}
+
+.connections_a {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+}
+
+.connections_name {
+    font-size: 13px;
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.connections_a:hover {
+    color: green;
+    font-weight: bold;
+}
+
+.message_connections {
+    position: absolute;
+    bottom: 100px;
+    left: -400px;
+    right: inherit;
+    border: 2px solid black;
+    box-sizing: border-box;
+    padding: 5px;
+    background-color: white;
+    border-radius: 10px;
+    font-size: 6px;
+    width: 400px;
+    transition: all 300ms;
+}
+
+.hide {
+    display: none;
+}
+.invisible {
+    opacity: 0;
+}
+
+.message_connections > img {
+    width: 350px;
 }

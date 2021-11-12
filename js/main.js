@@ -89,6 +89,9 @@ async function load() {
     }
     $('.clustering').val(select).prop('selected', true);
     dataJson = dataJson.default;
+    dataJson.edges.forEach((e) => {
+        if (e.source === '514' && e.target === '651') console.log(e);
+    });
 }
 
 load();

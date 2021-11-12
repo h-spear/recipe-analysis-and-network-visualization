@@ -700,6 +700,7 @@ canvas#sigma_bg_1 {
     font-size: 6px;
     width: 400px;
     transition: all 300ms;
+    visibility: visible;
 }
 
 .hide {
@@ -707,6 +708,7 @@ canvas#sigma_bg_1 {
 }
 .invisible {
     opacity: 0;
+    visibility: hidden;
 }
 
 .message_connections > img {

@@ -6,56 +6,80 @@ var sigInst, canvas, $GP;
 let label;
 const label_nation = [
     '한식',
+    '중국',
+    '멕시코',
+    '일본',
     '퓨전',
     '서양',
     '이탈리아',
-    '중국',
-    '일본',
     '동남아시아',
-    '멕시코',
 ];
 const label_way = [
     '구이',
+    '튀김,커틀릿',
+    '빵,과자',
     '부침',
+    '밑반찬,김치',
     '만두,면류',
     '밥,죽,스프',
-    '볶음',
-    '피자',
-    '밑반찬,김치',
-    '빵,과자',
-    '국',
-    '나물,생채,샐러드',
-    '조림',
-    '후식',
-    '샌드위치,햄버거',
     '찜',
-    '튀김,커틀릿',
-    '양념장',
-    '찌개,전골,스튜',
-    '음료',
-    '도시락,간식',
-    '양식',
+    '조림',
+    '국',
+    '후식',
+    '나물,생채,샐러드',
+    '샌드위치,햄버거',
     '떡,한과',
+    '음료',
+    '볶음',
+    '도시락,간식',
+    '양념장',
+    '양식',
+    '찌개,전골,스튜',
+    '피자',
     '그라탕,리조또',
 ];
 const label_kind = [
-    '닭고기류',
-    '어류/패류',
-    '쇠고기류',
+    '밀가루',
+    '알류',
+    '견과류',
+    '곡류',
     '가공식품류',
     '버섯류',
     '채소류',
-    '곡류',
-    '밀가루',
-    '견과류',
-    '알류',
-    '돼지고기류',
-    '과일류',
     '콩류',
+    '돼지고기류',
+    '어류/패류',
     '기타',
+    '쇠고기류',
+    '과일류',
+    '닭고기류',
     '해조류',
 ];
-const label_modularity = [''];
+const label_modularity = [
+    '3',
+    '7',
+    '4',
+    '5',
+    '0',
+    '6',
+    '8',
+    '11',
+    '1',
+    '2',
+    '10',
+    '13',
+    '12',
+    '21',
+    '17',
+    '15',
+    '9',
+    '16',
+    '20',
+    '14',
+    '19',
+    '22',
+    '18',
+];
 
 const moreInfo2 = document.querySelector('.connection');
 const popUp = document.querySelector('.message_connections');
@@ -66,13 +90,16 @@ moreInfo2.addEventListener('mouseout', () => {
     popUp.classList.add('invisible');
 });
 
+const tags = [[], []];
+
 async function load() {
     var data = sessionStorage.getItem('dataSet');
     let select = 'not';
-    if (data == 'not.json') {
-        dataJson;
-        labal = [];
-        return;
+    if (data == null) {
+        dataJson = await import('../data/data_modularity.js');
+        select = 'modularity';
+        sessionStorage.setItem('dataSet', 'data_modularity.json');
+        location.reload();
     }
     if (data == 'data.json') {
         dataJson = await import('../data/data.js');
@@ -89,9 +116,6 @@ async function load() {
     }
     $('.clustering').val(select).prop('selected', true);
     dataJson = dataJson.default;
-    dataJson.edges.forEach((e) => {
-        if (e.source === '514' && e.target === '651') console.log(e);
-    });
 }
 
 load();
@@ -939,3 +963,90 @@ function showCluster(a) {
     }
     return !1;
 }
+
+function showBetweenness() {
+    const tags = [];
+    let betweenSort = dataJson.nodes;
+    betweenSort.sort(function (a, b) {
+        a = a.attributes['Betweenness Centrality'];
+        b = b.attributes['Betweenness Centrality'];
+        return b - a;
+    });
+    betweenSort = betweenSort.slice(0, 50);
+    betweenSort.forEach((node) => {
+        tags.push(
+            '<li class="membership"><a href="#' +
+                node.label +
+                '" onmouseover="sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[\'' +
+                node.id +
+                '\'])" onclick="nodeActive(\'' +
+                node.id +
+                '\')" onmouseout="sigInst.refresh()">' +
+                '<span class="connections_name">' +
+                node.label +
+                '</span>' +
+                '<span class="connections_weight">' +
+                Math.round(node.attributes['Betweenness Centrality']) +
+                '</span>' +
+                '</a></li>'
+        );
+    });
+    $('.info').hide();
+
+    $GP.info_link.find('ul').html(tags.join(''));
+    sigInst.draw(2, 2, 2, 2);
+    $GP.info_data.hide();
+    $GP.info_p.html('Betweenness Centrality Ranking:');
+    $GP.info.animate({ width: 'show' }, 350);
+    $GP.search.clean();
+    $GP.cluster.hide();
+    //
+}
+
+const betweenBtn = document.querySelector('.betweenness_ranking');
+betweenBtn.addEventListener('click', () => {
+    showBetweenness();
+});
+
+function showDegree() {
+    const tags = [];
+    let betweenSort = dataJson.nodes;
+    betweenSort.sort(function (a, b) {
+        a = a.attributes['Degree'];
+        b = b.attributes['Degree'];
+        return b - a;
+    });
+    betweenSort = betweenSort.slice(0, 1000);
+    betweenSort.forEach((node) => {
+        tags.push(
+            '<li class="membership"><a href="#' +
+                node.label +
+                '" onmouseover="sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[\'' +
+                node.id +
+                '\'])" onclick="nodeActive(\'' +
+                node.id +
+                '\')" onmouseout="sigInst.refresh()">' +
+                '<span class="connections_name">' +
+                node.label +
+                '</span>' +
+                '<span class="connections_weight">' +
+                Math.round(node.attributes['Degree'] / 2) +
+                '</span>' +
+                '</a></li>'
+        );
+    });
+    $('.info').hide();
+
+    $GP.info_link.find('ul').html(tags.join(''));
+    sigInst.draw(2, 2, 2, 2);
+    $GP.info_data.hide();
+    $GP.info_p.html('Degree Ranking:');
+    $GP.info.animate({ width: 'show' }, 350);
+    $GP.search.clean();
+    $GP.cluster.hide();
+}
+
+const degreeBtn = document.querySelector('.degree_ranking');
+degreeBtn.addEventListener('click', () => {
+    showDegree();
+});

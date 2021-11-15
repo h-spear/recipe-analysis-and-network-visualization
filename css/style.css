@@ -730,6 +730,13 @@ canvas#sigma_bg_1 {
     width: 260px;
 }
 
+.membership > a {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    width: 200px;
+}
+
 .membership > a:hover {
     color: green;
     font-weight: bold;

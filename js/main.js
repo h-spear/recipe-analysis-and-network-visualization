@@ -1,4 +1,5 @@
 let dataJson;
+const dataDict = {};
 let prevColor;
 let prevNode = '';
 var sigInst, canvas, $GP;
@@ -116,6 +117,13 @@ async function load() {
     }
     $('.clustering').val(select).prop('selected', true);
     dataJson = dataJson.default;
+    dataJson.nodes.forEach((e) => {
+        dataDict[e.id] = {
+            color: e.color,
+            main: e.attributes.주재료,
+            sub: e.attributes.부재료,
+        };
+    });
 }
 
 load();
@@ -455,18 +463,29 @@ function configSigmaElements(config) {
         b,
         x = 0;
     setLabel();
-    for (b in sigInst.clusters)
+    label_tag = [];
+    for (b in sigInst.clusters) {
         a.push(
             '<div style="line-height:12px"><a href="#' +
                 b +
                 '"><div style="width:40px;height:12px;border:1px solid #fff;background:' +
                 b +
                 ';display:inline-block"></div> ' +
-                label[x++] +
+                label[x] +
                 ' (' +
                 sigInst.clusters[b].length +
                 ' members)</a></div>'
         );
+        label_tag.push(
+            '<div class="label_content" style="line-height:12px"><div style="width: 70px; height: 12px;border: 1px solid #fff;background:' +
+                b +
+                ';display:inline-block"></div><span>' +
+                label[x++] +
+                '</span><span><b>' +
+                sigInst.clusters[b].length +
+                '</b></span></div>'
+        );
+    }
     var regex = /[^0-9]/g; // 숫자가 아닌 문자열을 매칭하는 정규식
     a.sort(function (a, b) {
         a = a.slice(a.indexOf(' (')).replace(regex, '');
@@ -474,6 +493,8 @@ function configSigmaElements(config) {
         return b - a;
     });
     $GP.cluster.content(a.join(''));
+    $('.group_label').html(label_tag.join(''));
+
     b = {
         minWidth: 400,
         maxWidth: 800,
@@ -653,6 +674,22 @@ function showGroups(a) {
 }
 
 function nodeNormal() {
+    let b,
+        x = 0;
+    const label_tag = [];
+    for (b in sigInst.clusters) {
+        label_tag.push(
+            '<div class="label_content" style="line-height:12px"><div style="width: 70px; height: 12px;border: 1px solid #fff;background:' +
+                b +
+                ';display:inline-block"></div><span>' +
+                label[x++] +
+                '</span><span><b>' +
+                sigInst.clusters[b].length +
+                '</b></span></div>'
+        );
+    }
+    $('.group_label').html(label_tag.join(''));
+
     !0 != $GP.calculating &&
         !1 != sigInst.detail &&
         (showGroups(!1),
@@ -782,12 +819,35 @@ function nodeActive(a) {
             return b[1] - a[1];
         });
         d = '';
+        const dicts = {};
+        let now_main = dataDict[b.id].main;
+        let now_sub = dataDict[b.id].sub;
+        let now_ingre = new Set(
+            (now_main + ', ' + now_sub).replace('없음', '').split(', ')
+        );
+
         for (g in e) {
             c = e[g];
             /*if (c.group != d) {
-				d = c.group;
+                d = c.group;
 				f.push('<li class="cf" rel="' + c.color + '"><div class=""></div><div class="">' + d + "</div></li>");
 			}*/
+
+            let ingre_main = dataDict[c.id].main;
+            let ingre_sub = dataDict[c.id].sub;
+            let ingre = (ingre_main + ', ' + ingre_sub)
+                .replace('없음', '')
+                .split(', ');
+            let difference = [...ingre].filter((x) => !now_ingre.has(x));
+            let diff_tags = [];
+            difference.forEach((_ingre) => {
+                if (ingre_main.indexOf(_ingre) != -1) {
+                    diff_tags.push(`<b>${_ingre}</b>`);
+                } else if (ingre_sub.indexOf(_ingre) != -1) {
+                    diff_tags.push(`${_ingre}`);
+                }
+            });
+
             f.push(
                 '<li class="membership"><a href="#' +
                     c.name +
@@ -802,9 +862,35 @@ function nodeActive(a) {
                     '<span class="connections_weight">' +
                     nowSee[g][1].toFixed(3) +
                     '</span>' +
-                    '</a></li>'
+                    '</a>' +
+                    '<div class="popUp">' +
+                    diff_tags.join(', ') +
+                    '</div>' +
+                    '</li>'
             );
+            dicts[dataDict[c.id].color] =
+                (dicts[dataDict[c.id].color] || 0) + 1;
         }
+
+        const label_tag = [];
+        let x = 0,
+            now;
+        for (now in sigInst.clusters) {
+            if (dicts[now]) {
+                label_tag.push(
+                    '<div class="label_content" style="line-height:12px"><div style="width: 70px; height: 12px;border: 1px solid #fff;background:' +
+                        now +
+                        ';display:inline-block"></div><span>' +
+                        label[x] +
+                        '</span><span><b>' +
+                        dicts[now] +
+                        '</b></span></div>'
+                );
+            }
+            x++;
+        }
+        $('.group_label').html(label_tag.join(''));
+
         if (prevNode !== '') {
             prevNode.color = prevColor;
         }
@@ -950,6 +1036,26 @@ function showCluster(a) {
                         '</a></li>'
                 ));
         }
+
+        let x = 0;
+        let title;
+        for (now in sigInst.clusters) {
+            if (now === a) {
+                title = label[x];
+            }
+            x++;
+        }
+        $('.group_label').html(
+            '<div class="label_content" style="line-height:12px"><div style="width: 70px; height: 12px;border: 1px solid #fff;background:' +
+                a +
+                ';display:inline-block"></div><span>' +
+                '</span><span>' +
+                title +
+                '</span><span><b>' +
+                sigInst.clusters[a].length +
+                '</b></span></div>'
+        );
+
         sigInst.clusters[a] = e;
         sigInst.draw(2, 2, 2, 2);
         $GP.info_name.html('<b>' + a + '</b>');

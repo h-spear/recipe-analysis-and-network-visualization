@@ -723,16 +723,40 @@ canvas#sigma_bg_1 {
     width: 350px;
 }
 
-.membership > a {
+.membership {
     display: flex;
+    position: relative;
     justify-content: space-between;
-    width: 200px;
+    width: 260px;
 }
 
 .membership > a:hover {
     color: green;
     font-weight: bold;
 }
+
+.membership:hover .popUp {
+    visibility: visible;
+    opacity: 1;
+    transition: all 300ms;
+}
+
+.membership .popUp {
+    cursor: auto;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    background-color: white;
+    z-index: 1;
+    border: 1px solid black;
+    border-radius: 7px;
+    padding: 5px;
+    color: black;
+    top: 20px;
+    left: 20px;
+}
+
 .scenario_info {
     display: flex;
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
@@ -746,4 +770,26 @@ canvas#sigma_bg_1 {
     width: 50px;
     height: 45px;
     margin-left: 2px;
+}
+
+.group_label {
+    position: absolute;
+    display: flex;
+    top: 30px;
+    left: 50%;
+    justify-content: center;
+    transform: translateX(-50%);
+    max-width: 800px;
+    min-width: 300px;
+    flex-wrap: wrap;
+}
+
+.label_content {
+    font-size: 9px;
+    margin: 0px 3px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    letter-spacing: -1px;
 }

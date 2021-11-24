@@ -350,6 +350,7 @@ function setupGUI(config) {
     config.GP = $GP;
     initSigma(config);
 }
+
 function setLabel() {
     var data = sessionStorage.getItem('dataSet');
     if (data == 'not.json') labal = [];
@@ -1116,14 +1117,14 @@ betweenBtn.addEventListener('click', () => {
 
 function showDegree() {
     const tags = [];
-    let betweenSort = dataJson.nodes;
-    betweenSort.sort(function (a, b) {
+    let degreeSort = dataJson.nodes;
+    degreeSort.sort(function (a, b) {
         a = a.attributes['Degree'];
         b = b.attributes['Degree'];
         return b - a;
     });
-    betweenSort = betweenSort.slice(0, 1000);
-    betweenSort.forEach((node) => {
+    degreeSort = degreeSort.slice(0, 1000);
+    degreeSort.forEach((node) => {
         tags.push(
             '<li class="membership"><a href="#' +
                 node.label +
@@ -1155,4 +1156,72 @@ function showDegree() {
 const degreeBtn = document.querySelector('.degree_ranking');
 degreeBtn.addEventListener('click', () => {
     showDegree();
+});
+
+let search = [];
+function searchRecipe(ingre1, ingre2, ingre3) {
+    const tags = [];
+    search = [];
+    dataJson.nodes.forEach((node) => {
+        const ingre = `${node.attributes.주재료}, ${node.attributes.부재료}, ${node.attributes.양념}`;
+        if (
+            ingre.indexOf(ingre1) !== -1 &&
+            ingre.indexOf(ingre2) !== -1 &&
+            ingre.indexOf(ingre3) !== -1
+        ) {
+            search.push(node);
+        }
+    });
+    const searchSort = search;
+    searchSort.sort(function (a, b) {
+        a = a.attributes['Degree'];
+        b = b.attributes['Degree'];
+        return b - a;
+    });
+    searchSort.forEach((node) => {
+        tags.push(
+            '<li class="membership"><a href="#' +
+                node.label +
+                '" onmouseover="sigInst._core.plotter.drawHoverNode(sigInst._core.graph.nodesIndex[\'' +
+                node.id +
+                '\'])" onclick="nodeActive(\'' +
+                node.id +
+                '\')" onmouseout="sigInst.refresh()">' +
+                '<span class="connections_name">' +
+                node.label +
+                '</span>' +
+                '<span class="connections_weight">' +
+                Math.round(node.attributes['Degree'] / 2) +
+                '</span>' +
+                '</a></li>'
+        );
+    });
+    $('.info').hide();
+
+    $GP.info_link.find('ul').html(tags.join(''));
+    if (tags.length === 0) {
+        $GP.info_link.find('ul').html('일치하는 레시피가 없습니다.');
+    }
+    sigInst.draw(2, 2, 2, 2);
+    $GP.info_data.hide();
+    $GP.info_p.html('Degree Ranking:');
+    $GP.info.animate({ width: 'show' }, 350);
+    $GP.search.clean();
+    $GP.cluster.hide();
+}
+
+const searchBox = document.querySelector('.ingre_search');
+const searchBtn = document.querySelector('.recipe_search');
+searchBtn.addEventListener('click', () => {
+    searchBox.classList.remove('hide');
+});
+
+const ingreText = document.querySelectorAll('.ingre_input');
+const ingreBtn = document.querySelector('.ingre_go');
+ingreBtn.addEventListener('click', () => {
+    searchRecipe(ingreText[0].value, ingreText[1].value, ingreText[2].value);
+    ingreText[0].value = '';
+    ingreText[1].value = '';
+    ingreText[2].value = '';
+    searchBox.classList.add('hide');
 });

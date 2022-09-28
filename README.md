@@ -1,1 +1,1 @@
-https://h-spear.github.io/Recipe-Analysis-and-Network-Visualization/
+https://h-spear.github.io/recipe-analysis-and-network-visualization/

@@ -2,7 +2,7 @@
 
 요리 레시피들을 그래프를 통해 데이터를 분석하여 레시피들간의 연관성을 파악하고, 기존 레시피 사이트에서는 제공하지 않는 새로운 기능을 제공하는 것을 목적으로 프로젝트를 진행하였다.
 
----
+<br/>
 
 ## Team
 
@@ -10,25 +10,25 @@
 -   박영빈
 -   임철수
 
----
+<br/>
 
 ## Report
 
 -   [pdf](_docs/report.pdf)
 
----
+<br/>
 
 ## Application
 
 -   https://h-spear.github.io/recipe-analysis-and-network-visualization/
 
----
+<br/>
 
 ## Dataset
 
 -   '<a href='https://www.menupan.com/cook/recipe_search.asp'>메뉴판</a>' 사이트의 1,583개의 레시피
 
----
+<br/>
 
 ## Visualization
 
@@ -40,7 +40,7 @@
 -   Modularity Class<br/>
     <img src="_docs/modularity.jpg" width="500px" height="315px">
 
----
+<br/>
 
 ## Analysis
 
@@ -53,7 +53,7 @@
 | :-----------------------------------------------------: | :-----------------------------------------------------: |
 | <img src="_docs/fig2.png" width="250px" height="400px"> | <img src="_docs/fig3.jpg" width="250px" height="400px"> |
 
----
+<br/>
 
 ## Scenario
 

@@ -12,8 +12,6 @@
 
 -   [pdf](_docs/report.pdf)
 
-<br/>
-
 ## Application
 
 -   https://h-spear.github.io/recipe-analysis-and-network-visualization/
